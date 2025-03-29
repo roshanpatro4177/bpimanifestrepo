@@ -28,3 +28,22 @@ spec:
         - name: neo4j-storage
           persistentVolumeClaim:
             claimName: neo4j-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j-nodeport
+spec:
+  selector:
+    app: neo4j
+  ports:
+    - protocol: TCP
+      port: 7474       # HTTP Port for Neo4j Browser
+      targetPort: 7474
+      nodePort: 30010  # Exposed Port on Host Machine
+    - protocol: TCP
+      port: 7687       # Bolt Port for Drivers
+      targetPort: 7687
+      nodePort: 30011  # Exposed Port on Host Machine
+  type: NodePort
+
