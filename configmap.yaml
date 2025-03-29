@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  POSTGRES_HOST: "postgres-db"
+  POSTGRES_PORT: "5432"
+  MONGO_HOST: "mongo-db"
+  MONGO_PORT: "27017"
+  NEO4J_HOST: "neo4j-db"
+  NEO4J_PORT: "7687"

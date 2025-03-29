@@ -1,0 +1,145 @@
+---
+# PostgreSQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+        - name: postgres-db
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "inventory"
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+# PostgreSQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-db
+spec:
+  selector:
+    app: postgres-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+---
+# MongoDB Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-db
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+    spec:
+      containers:
+        - name: mongo-db
+          image: mongo:latest
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "mongo"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "mongo"
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-storage
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+---
+# MongoDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db
+spec:
+  selector:
+    app: mongo-db
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: ClusterIP
+---
+# Neo4j Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neo4j-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neo4j-db
+  template:
+    metadata:
+      labels:
+        app: neo4j-db
+    spec:
+      containers:
+        - name: neo4j-db
+          image: neo4j:latest
+          env:
+            - name: NEO4J_AUTH
+              value: "neo4j/neo4jpassword"
+          ports:
+            - containerPort: 7687
+            - containerPort: 7474
+          volumeMounts:
+            - mountPath: /data
+              name: neo4j-storage
+      volumes:
+        - name: neo4j-storage
+          persistentVolumeClaim:
+            claimName: neo4j-pvc
+---
+# Neo4j Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j-db
+spec:
+  selector:
+    app: neo4j-db
+  ports:
+    - protocol: TCP
+      port: 7687
+      targetPort: 7687
+    - protocol: TCP
+      port: 7474
+      targetPort: 7474
+  type: ClusterIP
