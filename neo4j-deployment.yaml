@@ -1,37 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo
+  name: neo4j
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo
+      app: neo4j
   template:
     metadata:
       labels:
-        app: mongo
+        app: neo4j
     spec:
       containers:
-        - name: mongo
-          image: mongo:latest
+        - name: neo4j
+          image: neo4j:latest
           env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: MONGO_USER
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: MONGO_PASSWORD
+            - name: NEO4J_AUTH
+              value: neo4j/$(NEO4J_PASSWORD)
           ports:
-            - containerPort: 27017
+            - containerPort: 7474
+            - containerPort: 7687
           volumeMounts:
-            - name: mongo-storage
-              mountPath: /data/db
+            - name: neo4j-storage
+              mountPath: /data
       volumes:
-        - name: mongo-storage
+        - name: neo4j-storage
           persistentVolumeClaim:
-            claimName: mongo-pvc
+            claimName: neo4j-pvc
