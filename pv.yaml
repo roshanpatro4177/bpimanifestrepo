@@ -25,3 +25,18 @@ spec:
   storageClassName: microk8s-hostpath
   hostPath:
     path: "/mnt/data/mongo"
+  ---
+  apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: neo4j-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: microk8s-hostpath
+  hostPath:
+    path: "/mnt/data/neo4j"
+
