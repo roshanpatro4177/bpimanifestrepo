@@ -37,13 +37,16 @@ spec:
   selector:
     app: neo4j
   ports:
-    - protocol: TCP
-      port: 7474       # HTTP Port for Neo4j Browser
+    - name: http
+      protocol: TCP
+      port: 7474
       targetPort: 7474
-      nodePort: 30010  # Exposed Port on Host Machine
-    - protocol: TCP
-      port: 7687       # Bolt Port for Drivers
+      nodePort: 30074
+    - name: bolt
+      protocol: TCP
+      port: 7687
       targetPort: 7687
-      nodePort: 30011  # Exposed Port on Host Machine
+      nodePort: 30087
   type: NodePort
+
 
