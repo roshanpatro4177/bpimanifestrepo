@@ -8,6 +8,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  volumeName: postgres-pv  # Explicit binding to PV
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -19,3 +20,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  volumeName: mongo-pv  # Explicit binding to PV
